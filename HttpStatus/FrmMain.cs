@@ -16,6 +16,8 @@ namespace HttpStatus
     public FrmMain()
     {
       InitializeComponent();
+
+      FrmMain_ResizeEnd(null, null);
     }
 
     void BtnRequest_Click(object sender, EventArgs e)
@@ -31,7 +33,9 @@ namespace HttpStatus
 
         txtResponse.Text = "Requesting...";
 
-        txtResponse.Text = string.Format("IP: {0}", GetIPList(url)) + Environment.NewLine;
+        txtResponse.Text = "Your IP(s):" + GetIPList(Environment.MachineName) + Environment.NewLine + Environment.NewLine;
+
+        txtResponse.Text += "Responded IP(s):" + GetIPList(new Uri(url).Host) + Environment.NewLine;
 
         var client = new RestClient(url)
         {
@@ -40,19 +44,23 @@ namespace HttpStatus
           Timeout = 10000
         };
 
-        var request = new RestRequest(Method.GET);
+        var request = new RestRequest(chkPost.Checked ? Method.POST : Method.GET);
 
         var response = client.Execute(request);
 
         List<string> lines = new List<string>
         {
-          string.Format("StatusCode: {0}", Convert.ToInt32(response.StatusCode).ToString()),
-          Environment.NewLine
+          Environment.NewLine,
+          $"Responded status code: {Convert.ToInt32(response.StatusCode)}",
+          Environment.NewLine,
+          "Responded headers:",
         };
 
-        lines.AddRange(response.Headers.Select(d => string.Format("{0}: {1}", d.Name, d.Value)));
+        lines.AddRange(response.Headers.Select(d => $"{d.Name}: {d.Value}"));
 
         lines.Add(Environment.NewLine);
+
+        lines.Add("Responded source code:");
 
         lines.Add(response.Content);
 
@@ -60,33 +68,58 @@ namespace HttpStatus
       }
       catch (Exception exc)
       {
-        txtResponse.Text = exc.Message;
+        MessageBox.Show(exc.Message);
       }
     }
+
+    string HTTP_Scheme = "http://";
+    string HTTPS_Scheme = "https://";
 
     string ParseURI()
     {
-      var scheme = chkSSL.Checked ? "https://" : "http://";
+      var url = txtURL.Text.Trim().ToLower();
 
-      var url = txtURL.Text.Trim();
-
-      if (url.StartsWith(scheme, StringComparison.CurrentCultureIgnoreCase))
+      if (chkSSL.Checked)
       {
-        return url;
+        if (url.StartsWith(HTTP_Scheme))
+        {
+          url = url.Replace(HTTP_Scheme, HTTPS_Scheme);
+        }
+        else if (url.StartsWith(HTTPS_Scheme))
+        {
+
+        }
+        else
+        {
+          url = HTTPS_Scheme + url;
+        }
+      }
+      else
+      {
+        if (url.StartsWith(HTTP_Scheme))
+        {
+
+        }
+        else if (url.StartsWith(HTTPS_Scheme))
+        {
+
+        }
+        else
+        {
+          url = HTTP_Scheme + url;
+        }
       }
 
-      return scheme + url;
+      return url;
     }
 
-    public static string GetIPList(string url)
+    public static string GetIPList(string hostNameOrAddress)
     {
-      Uri uri = new Uri(url);
+      IPHostEntry hostEntry = Dns.GetHostEntry(hostNameOrAddress);
 
-      IPHostEntry hostEntry = Dns.GetHostEntry(uri.Host);
+      var addressList = hostEntry.AddressList.Select(d => d.ToString()).ToList();
 
-      var addressList = hostEntry.AddressList.Select(d => d.ToString());
-
-      return string.Join(Environment.NewLine, addressList);
+      return (addressList.Count > 1 ? Environment.NewLine : " ") + string.Join(Environment.NewLine, addressList);
     }
 
     void TxtURL_KeyPress(object sender, KeyPressEventArgs e)
@@ -95,6 +128,15 @@ namespace HttpStatus
       {
         BtnRequest_Click(null, null);
       }
+    }
+
+    private void FrmMain_ResizeEnd(object sender, EventArgs e)
+    {
+      txtResponse.Location.Offset(10, topPanel.Height + 10);
+
+      txtResponse.Width = this.Width - 50;
+
+      txtResponse.Height = this.Height - topPanel.Height - 60;
     }
   }
 }
