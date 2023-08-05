@@ -129,7 +129,8 @@
       this.Name = "FrmMain";
       this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
       this.Text = "HttpStatus";
-      this.ResizeEnd += new System.EventHandler(this.FrmMain_ResizeEnd);
+      this.Load += new System.EventHandler(this.FrmMain_ClientSizeChanged);
+      this.ClientSizeChanged += new System.EventHandler(this.FrmMain_ClientSizeChanged);
       this.topPanel.ResumeLayout(false);
       this.topPanel.PerformLayout();
       this.ResumeLayout(false);

@@ -16,8 +16,6 @@ namespace HttpStatus
     public FrmMain()
     {
       InitializeComponent();
-
-      FrmMain_ResizeEnd(null, null);
     }
 
     void BtnRequest_Click(object sender, EventArgs e)
@@ -130,7 +128,7 @@ namespace HttpStatus
       }
     }
 
-    private void FrmMain_ResizeEnd(object sender, EventArgs e)
+    private void FrmMain_ClientSizeChanged(object sender, EventArgs e)
     {
       txtResponse.Location.Offset(10, topPanel.Height + 10);
 
