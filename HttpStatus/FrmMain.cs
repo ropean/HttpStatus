@@ -31,9 +31,24 @@ namespace HttpStatus
 
         txtResponse.Text = "Requesting...";
 
-        txtResponse.Text = "Your IP(s):" + GetIPList(Environment.MachineName) + Environment.NewLine + Environment.NewLine;
+        txtResponse.Text = $"Your requested address is: {url}" + Environment.NewLine;
 
-        txtResponse.Text += "Responded IP(s):" + GetIPList(new Uri(url).Host) + Environment.NewLine;
+        var clientIPs = ParseAddressList(GetIPList(Environment.MachineName).ToList());
+
+        txtResponse.Text += "Your IP(s):" + clientIPs + Environment.NewLine + Environment.NewLine;
+
+        List<IPAddress> addressList = new List<IPAddress>();
+
+        if (IPAddress.TryParse(url.Replace(HTTP_Scheme, "").Replace(HTTPS_Scheme, ""), out IPAddress address))
+        {
+          addressList.Add(address);
+        }
+        else
+        {
+          addressList.AddRange(GetIPList(new Uri(url).Host));
+        }
+
+        txtResponse.Text += "Responded IP(s):" + ParseAddressList(addressList) + Environment.NewLine;
 
         var client = new RestClient(url)
         {
@@ -111,12 +126,15 @@ namespace HttpStatus
       return url;
     }
 
-    public static string GetIPList(string hostNameOrAddress)
+    public static IPAddress[] GetIPList(string hostNameOrAddress)
     {
       IPHostEntry hostEntry = Dns.GetHostEntry(hostNameOrAddress);
 
-      var addressList = hostEntry.AddressList.Select(d => d.ToString()).ToList();
+      return hostEntry.AddressList;
+    }
 
+    string ParseAddressList(List<IPAddress> addressList)
+    {
       return (addressList.Count > 1 ? Environment.NewLine : " ") + string.Join(Environment.NewLine, addressList);
     }
 
