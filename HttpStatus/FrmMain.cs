@@ -52,7 +52,7 @@ namespace HttpStatus
 
         var client = new RestClient(url)
         {
-          FollowRedirects = false,
+          FollowRedirects = chkRedirect.Checked,
           CachePolicy = new HttpRequestCachePolicy(HttpRequestCacheLevel.NoCacheNoStore),
           Timeout = 10000
         };
@@ -85,8 +85,8 @@ namespace HttpStatus
       }
     }
 
-    string HTTP_Scheme = "http://";
-    string HTTPS_Scheme = "https://";
+    public const string HTTP_Scheme = "http://";
+    public const string HTTPS_Scheme = "https://";
 
     string ParseURI()
     {

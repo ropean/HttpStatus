@@ -35,6 +35,7 @@
       this.chkSSL = new System.Windows.Forms.CheckBox();
       this.chkPost = new System.Windows.Forms.CheckBox();
       this.btnRequest = new System.Windows.Forms.Button();
+      this.chkRedirect = new System.Windows.Forms.CheckBox();
       this.topPanel.SuspendLayout();
       this.SuspendLayout();
       // 
@@ -42,6 +43,7 @@
       // 
       this.txtResponse.BackColor = System.Drawing.SystemColors.Control;
       this.txtResponse.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+      this.txtResponse.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.txtResponse.Location = new System.Drawing.Point(22, 68);
       this.txtResponse.Margin = new System.Windows.Forms.Padding(10);
       this.txtResponse.Multiline = true;
@@ -58,6 +60,7 @@
       this.topPanel.Controls.Add(this.txtURL);
       this.topPanel.Controls.Add(this.chkSSL);
       this.topPanel.Controls.Add(this.chkPost);
+      this.topPanel.Controls.Add(this.chkRedirect);
       this.topPanel.Controls.Add(this.btnRequest);
       this.topPanel.Dock = System.Windows.Forms.DockStyle.Top;
       this.topPanel.Location = new System.Drawing.Point(0, 0);
@@ -73,9 +76,9 @@
       this.txtURL.Location = new System.Drawing.Point(22, 12);
       this.txtURL.Margin = new System.Windows.Forms.Padding(2);
       this.txtURL.Name = "txtURL";
-      this.txtURL.Size = new System.Drawing.Size(550, 29);
+      this.txtURL.Size = new System.Drawing.Size(500, 29);
       this.txtURL.TabIndex = 1;
-      this.txtURL.Text = "xy724.com";
+      this.txtURL.Text = "www.tobemvp.com";
       this.txtURL.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TxtURL_KeyPress);
       // 
       // chkSSL
@@ -83,7 +86,7 @@
       this.chkSSL.Checked = true;
       this.chkSSL.CheckState = System.Windows.Forms.CheckState.Checked;
       this.chkSSL.Font = new System.Drawing.Font("Microsoft YaHei", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-      this.chkSSL.Location = new System.Drawing.Point(584, 13);
+      this.chkSSL.Location = new System.Drawing.Point(534, 13);
       this.chkSSL.Margin = new System.Windows.Forms.Padding(10, 3, 3, 3);
       this.chkSSL.Name = "chkSSL";
       this.chkSSL.Size = new System.Drawing.Size(60, 30);
@@ -95,7 +98,7 @@
       // chkPost
       // 
       this.chkPost.Font = new System.Drawing.Font("Microsoft YaHei", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-      this.chkPost.Location = new System.Drawing.Point(657, 13);
+      this.chkPost.Location = new System.Drawing.Point(607, 13);
       this.chkPost.Margin = new System.Windows.Forms.Padding(10, 3, 3, 3);
       this.chkPost.Name = "chkPost";
       this.chkPost.Size = new System.Drawing.Size(60, 30);
@@ -107,7 +110,8 @@
       // btnRequest
       // 
       this.btnRequest.Font = new System.Drawing.Font("Microsoft YaHei", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-      this.btnRequest.Location = new System.Drawing.Point(722, 12);
+      this.btnRequest.ForeColor = System.Drawing.Color.DeepPink;
+      this.btnRequest.Location = new System.Drawing.Point(785, 12);
       this.btnRequest.Margin = new System.Windows.Forms.Padding(2);
       this.btnRequest.Name = "btnRequest";
       this.btnRequest.Size = new System.Drawing.Size(100, 30);
@@ -115,6 +119,18 @@
       this.btnRequest.Text = "Request";
       this.btnRequest.UseVisualStyleBackColor = true;
       this.btnRequest.Click += new System.EventHandler(this.BtnRequest_Click);
+      // 
+      // chkRedirect
+      // 
+      this.chkRedirect.Font = new System.Drawing.Font("Microsoft YaHei", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+      this.chkRedirect.Location = new System.Drawing.Point(680, 13);
+      this.chkRedirect.Margin = new System.Windows.Forms.Padding(10, 3, 3, 3);
+      this.chkRedirect.Name = "chkRedirect";
+      this.chkRedirect.Size = new System.Drawing.Size(100, 30);
+      this.chkRedirect.TabIndex = 5;
+      this.chkRedirect.Text = "Redirect";
+      this.chkRedirect.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+      this.chkRedirect.UseVisualStyleBackColor = true;
       // 
       // FrmMain
       // 
@@ -145,6 +161,7 @@
     private System.Windows.Forms.CheckBox chkSSL;
     private System.Windows.Forms.FlowLayoutPanel topPanel;
     private System.Windows.Forms.CheckBox chkPost;
+    private System.Windows.Forms.CheckBox chkRedirect;
   }
 }
 
