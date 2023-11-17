@@ -5,7 +5,9 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Cache;
+using System.Net.Http.Headers;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -50,14 +52,16 @@ namespace HttpStatus
 
         txtResponse.Text += "Responded IP(s):" + ParseAddressList(addressList) + Environment.NewLine;
 
-        var client = new RestClient(url)
+        var requestOptions = new RestClientOptions()
         {
           FollowRedirects = chkRedirect.Checked,
-          CachePolicy = new HttpRequestCachePolicy(HttpRequestCacheLevel.NoCacheNoStore),
-          Timeout = 10000
+          CachePolicy = new CacheControlHeaderValue() { NoCache = true },
+          MaxTimeout = 10000
         };
 
-        var request = new RestRequest(chkPost.Checked ? Method.POST : Method.GET);
+        var client = new RestClient(requestOptions);
+
+        var request = new RestRequest(url, chkPost.Checked ? Method.Post : Method.Get);
 
         var response = client.Execute(request);
 
