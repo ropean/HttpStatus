@@ -78,7 +78,7 @@
       this.txtURL.Name = "txtURL";
       this.txtURL.Size = new System.Drawing.Size(500, 29);
       this.txtURL.TabIndex = 1;
-      this.txtURL.Text = "www.tobemvp.com";
+      this.txtURL.Text = "aceapp.dev";
       this.txtURL.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TxtURL_KeyPress);
       // 
       // chkSSL
