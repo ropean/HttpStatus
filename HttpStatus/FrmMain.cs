@@ -1,10 +1,10 @@
-﻿using RestSharp;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Cache;
+using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading;
@@ -52,36 +52,47 @@ namespace HttpStatus
 
                 txtResponse.Text += "Responded IP(s):" + ParseAddressList(addressList) + Environment.NewLine;
 
-                var requestOptions = new RestClientOptions()
+                var handler = new HttpClientHandler()
                 {
-                    FollowRedirects = chkRedirect.Checked,
-                    CachePolicy = new CacheControlHeaderValue() { NoCache = true },
-                    Timeout = new TimeSpan(0, 0, 10000)
+                    AllowAutoRedirect = chkRedirect.Checked,
+                    UseCookies = false,
                 };
 
-                var client = new RestClient(requestOptions);
+                using (var client = new HttpClient(handler))
+                {
+                    client.Timeout = TimeSpan.FromSeconds(10000);
+                    client.DefaultRequestHeaders.CacheControl = new CacheControlHeaderValue { NoCache = true };
 
-                var request = new RestRequest(url, chkPost.Checked ? Method.Post : Method.Get);
+                    HttpResponseMessage responseMessage;
+                    if (chkPost.Checked)
+                    {
+                        responseMessage = client.PostAsync(url, new StringContent(string.Empty)).GetAwaiter().GetResult();
+                    }
+                    else
+                    {
+                        responseMessage = client.GetAsync(url).GetAwaiter().GetResult();
+                    }
 
-                var response = client.Execute(request);
+                    var responseContent = responseMessage.Content.ReadAsStringAsync().GetAwaiter().GetResult();
 
                 List<string> lines = new List<string>
         {
           Environment.NewLine,
-          $"Responded status code: {Convert.ToInt32(response.StatusCode)}",
+          $"Responded status code: {(int)responseMessage.StatusCode}",
           Environment.NewLine,
           "Responded headers:",
         };
 
-                lines.AddRange(response.Headers.Select(d => $"{d.Name}: {d.Value}"));
+                lines.AddRange(responseMessage.Headers.Select(d => $"{d.Key}: {string.Join(", ", d.Value)}"));
+                lines.AddRange(responseMessage.Content.Headers.Select(d => $"{d.Key}: {string.Join(", ", d.Value)}"));
 
                 lines.Add(Environment.NewLine);
 
                 lines.Add("Responded source code:");
 
-                lines.Add(response.Content);
-
-                txtResponse.Text += string.Join(Environment.NewLine, lines);
+                lines.Add(responseContent);
+                    txtResponse.Text += string.Join(Environment.NewLine, lines);
+                }
             }
             catch (Exception exc)
             {
