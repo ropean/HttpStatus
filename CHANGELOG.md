@@ -23,7 +23,15 @@ This project adheres to Keep a Changelog and Semantic Versioning where practical
 
 - Added `.editorconfig` enforcing 2-space indentation for C#.
 - Updated `scripts/clean.cmd` to also remove the top-level `packages` directory.
+ - Added `ai/prompt.json` (structured AI metadata) and `ai/prompt.md` (detailed project spec for AI regeneration).
+ - Added MIT `LICENSE` file.
+ - Added GitHub Actions release workflow to build on tags and publish artifacts.
 
 ### Build
 
 - Project builds successfully in Release | Any CPU without external packages.
+ - Build script wires AssemblyVersion/FileVersion/InformationalVersion from the latest Git tag.
+
+### Release
+
+- GitHub Actions publishes only `HttpStatus.exe` to the GitHub Release for `v*` tags.
