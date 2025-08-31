@@ -1,0 +1,176 @@
+{
+  "project": {
+    "name": "HttpStatus",
+    "description": "Windows Forms tool to send HTTP requests and inspect raw responses (status, headers, body) with resolved client/server IPs.",
+    "type": "desktop",
+    "platform": "windows",
+    "languages": ["C#"],
+    "framework": ".NET Framework 4.8",
+    "app_kind": "WinForms"
+  },
+  "repository": {
+    "root": ".",
+    "solution": "HttpStatus.sln",
+    "projects": [
+      {
+        "name": "HttpStatus",
+        "path": "HttpStatus/HttpStatus.csproj",
+        "output_type": "WinExe"
+      }
+    ],
+    "important_paths": [
+      "HttpStatus/Program.cs",
+      "HttpStatus/FrmMain.cs",
+      "HttpStatus/FrmMain.Designer.cs",
+      "HttpStatus/FrmMain.resx",
+      "HttpStatus/Properties/",
+      "scripts/build.cmd",
+      "scripts/clean.cmd",
+      "CHANGELOG.md",
+      "README.md",
+      ".editorconfig"
+    ]
+  },
+  "build_and_run": {
+    "requirements": ["Visual Studio 2022", ".NET Framework 4.8"],
+    "build": {
+      "script": "scripts\\build.cmd",
+      "configuration": "Release",
+      "platform": "Any CPU"
+    },
+    "clean": {
+      "script": "scripts\\clean.cmd",
+      "removes": ["HttpStatus/bin", "HttpStatus/obj", "packages"]
+    },
+    "run": {
+      "binary": "HttpStatus\\bin\\Release\\HttpStatus.exe"
+    }
+  },
+  "constraints": {
+    "indentation": {
+      "indent_style": "space",
+      "indent_size": 2
+    },
+    "line_endings": "crlf",
+    "encoding": "utf-8-bom",
+    "do_not_reformat_generated_files": true,
+    "avoid_heavy_markdown_in_chat": true,
+    "no_inline_code_narration": true
+  },
+  "coding_standards": {
+    "naming": {
+      "variables": "Descriptive, full words; avoid abbreviations",
+      "functions": "Verbs or verb phrases",
+      "avoid_short_names": true
+    },
+    "typing": {
+      "explicit_signatures_for_public_apis": true,
+      "avoid_any_or_unsafe_casts": true
+    },
+    "control_flow": {
+      "use_guard_clauses": true,
+      "limit_nesting_levels": 3,
+      "meaningful_error_handling": true,
+      "avoid_empty_catch": true
+    },
+    "comments": {
+      "focus_on_why_not_how": true,
+      "avoid_trivial_comments": true,
+      "no_inline_explanations_in_code": true
+    },
+    "formatting": {
+      "multi_line_over_complex_one_liners": true,
+      "wrap_long_lines": true,
+      "match_existing_style": true
+    }
+  },
+  "communication": {
+    "style": {
+      "concise_default": true,
+      "use_markdown_headings": true,
+      "bold_key_points": true,
+      "code_fences_for_snippets": true
+    },
+    "status_updates": {
+      "when": ["before tool calls", "after edits", "before build/test", "after completion"],
+      "content": ["what was done", "what is next", "risks/blockers if any"],
+      "examples": [
+        "Let me search for where the load balancer is configured.",
+        "I found the config. Now I'll update replicas to 3.",
+        "My edit introduced a linter error. Let me fix that."
+      ]
+    },
+    "citations": {
+      "existing_code": "Use startLine:endLine:filepath fenced blocks",
+      "new_code": "Use language-tagged code fences"
+    }
+  },
+  "workflows": {
+    "discovery": ["Use semantic search to understand unfamiliar code", "Read key files before editing", "Prefer broad-to-narrow exploration"],
+    "implementation": [
+      "Create/maintain a concise TODO list for multi-step tasks",
+      "Make minimal, focused edits",
+      "Run build/tests after substantive changes",
+      "Fix linter/build errors before marking tasks complete"
+    ],
+    "search": {
+      "primary": "semantic",
+      "exact_match": "grep for symbols/strings",
+      "tips": ["scope searches", "avoid overly broad globs"]
+    }
+  },
+  "acceptance_criteria": {
+    "build_green": true,
+    "no_new_linter_errors": true,
+    "style_consistent": true,
+    "docs_updated_when_needed": true,
+    "changelog_updated_for_user_visible_changes": true
+  },
+  "security_and_quality": {
+    "validate_inputs": true,
+    "avoid_blocking_calls_on_ui_thread": true,
+    "use_async_await_for_io": true,
+    "handle_http_errors_gracefully": true
+  },
+  "templates": {
+    "task_brief": "Goal: {goal}. Deliverables: {deliverables}. Constraints: {constraints}.",
+    "commit_message": "{type}: {summary}\n\n- {change_1}\n- {change_2}",
+    "pr_description": "Summary\n- {summary}\n\nMotivation\n- {motivation}\n\nChanges\n- {changes}\n\nTesting\n- {testing}",
+    "status_update": "{what_just_happened}. Now I'll {next_step}.{risks}",
+    "bug_report": "Observed: {observed}. Expected: {expected}. Steps: {steps}. Logs: {logs}."
+  },
+  "domain_specific_notes": {
+    "http_layer": "Use System.Net.Http (HttpClient). No RestSharp.",
+    "config": "No App.config binding redirects required under .NET 4.8.",
+    "ui": "WinForms; avoid cross-thread UI updates; keep UI responsive"
+  },
+  "file_policies": {
+    "generated_files": [
+      "HttpStatus/FrmMain.Designer.cs",
+      "HttpStatus/Properties/Resources.Designer.cs",
+      "HttpStatus/Properties/Settings.Designer.cs"
+    ],
+    "do_not_hand_edit_generated": true
+  },
+  "style_enforcement": {
+    "editorconfig": true,
+    "format_on_save_recommended": true,
+    "indentation": "2 spaces"
+  },
+  "run_commands": {
+    "non_interactive": true,
+    "windows_shell": "cmd.exe",
+    "examples": ["scripts\\build.cmd", "scripts\\clean.cmd"]
+  },
+  "glossary": {
+    "FrmMain": "Main Windows Form handling UI and HTTP requests",
+    "Program.cs": "Application entry point",
+    "HttpClient": "System.Net.Http client for requests"
+  },
+  "metadata": {
+    "version": 1,
+    "created": "2025-08-31",
+    "maintainers": ["project-owner"],
+    "license": "MIT or project default"
+  }
+}
