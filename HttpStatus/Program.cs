@@ -18,7 +18,7 @@ namespace HttpStatus
 
       Application.SetCompatibleTextRenderingDefault(false);
 
-      Control.CheckForIllegalCrossThreadCalls = false;
+      // Keep cross-thread checks enabled; UI updates are done on the UI thread via async/await
 
       ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3
         | SecurityProtocolType.Tls
