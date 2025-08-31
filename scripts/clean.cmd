@@ -22,6 +22,7 @@ if defined MSBUILD (
 rem Ensure directories are removed regardless of MSBuild availability
 if exist HttpStatus\bin rmdir /s /q HttpStatus\bin
 if exist HttpStatus\obj rmdir /s /q HttpStatus\obj
+if exist packages rmdir /s /q packages
 
 exit /b %errorlevel%
 
