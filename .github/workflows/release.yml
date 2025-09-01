@@ -1,50 +1,62 @@
-name: Release
+name: Build and Release
 
 on:
   push:
     tags:
       - 'v*'
-
-permissions:
-  contents: write
+  workflow_dispatch:
 
 jobs:
-  build-and-release:
+  build:
     runs-on: windows-latest
+    permissions:
+      contents: write # Required to create releases
+
     steps:
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v2
-        with:
-          vs-version: '[17.0,18.0)'
 
-      - name: Build (Release | Any CPU)
-        shell: cmd
-        run: scripts\build.cmd
-
-      - name: Collect artifact (HttpStatus.exe only)
-        shell: pwsh
+      - name: Extract version from tag
+        id: get_version
         run: |
-          New-Item -ItemType Directory -Force -Path dist | Out-Null
-          Copy-Item -Path "HttpStatus\bin\Release\HttpStatus.exe" -Destination dist -Force
+          $versionNumber = "${{ github.ref_name }}" -replace "^v", ""
+          echo "VERSION_NUMBER=$versionNumber" >> $env:GITHUB_OUTPUT
+          Write-Host "Version number: $versionNumber"
 
-      - name: Upload build artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: HttpStatus-${{ github.ref_name }}
-          path: dist/HttpStatus.exe
+      - name: Update AssemblyInfo with version
+        run: |
+          $version = "${{ steps.get_version.outputs.VERSION_NUMBER }}"
+          $assemblyInfoPath = "HttpStatus/Properties/AssemblyInfo.cs"
+          $content = Get-Content $assemblyInfoPath -Raw
+          $content = $content -replace '\[assembly: AssemblyVersion\(".*"\)\]', "[assembly: AssemblyVersion(`"$version.0`")]"
+          $content = $content -replace '\[assembly: AssemblyFileVersion\(".*"\)\]', "[assembly: AssemblyFileVersion(`"$version.0`")]"
+          $content = $content -replace '\[assembly: AssemblyInformationalVersion\(".*"\)\]', "[assembly: AssemblyInformationalVersion(`"$version.0`")]"
+          Set-Content $assemblyInfoPath $content -Encoding UTF8
+          Write-Host "Updated AssemblyInfo.cs with version $version.0"
+
+      - name: Build using build.cmd
+        run: |
+          ./scripts/build.cmd
+
+      - name: Verify .exe exists
+        run: |
+          if (-not (Test-Path "HttpStatus/bin/Release/HttpStatus.exe")) {
+            Write-Error "HttpStatus.exe not found in build output!"
+            exit 1
+          }
+          Write-Host "Build successful - HttpStatus.exe found"
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v1
         with:
-          files: dist/HttpStatus.exe
+          tag_name: ${{ steps.get_version.outputs.VERSION }}
+          name: Release ${{ steps.get_version.outputs.VERSION }}
+          files: HttpStatus/bin/Release/HttpStatus.exe
           draft: false
           prerelease: false
-          # body_path: CHANGELOG.md
-          token: ${{ secrets.GITHUB_TOKEN }}
+          generate_release_notes: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

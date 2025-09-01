@@ -6,16 +6,6 @@ set SOLUTION=HttpStatus.sln
 set CONFIG=Release
 set PLATFORM=Any CPU
 
-rem Determine version from latest Git tag (fallback to 1.0.0)
-set GIT_TAG=
-where git >nul 2>nul
-if %errorlevel% equ 0 (
-  for /f "usebackq delims=" %%t in (`git describe --tags --abbrev=0 2^>nul`) do set GIT_TAG=%%t
-)
-if not defined GIT_TAG set GIT_TAG=1.0.0
-
-echo Using version: %GIT_TAG%
-
 rem Find vswhere
 set VSWHERE="%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe"
 if not exist %VSWHERE% (
@@ -43,7 +33,5 @@ if %errorlevel% neq 0 (
 )
 
 echo Building %SOLUTION% (%CONFIG% ^| %PLATFORM%)...
-%MSBUILD% %SOLUTION% /m /t:Rebuild /p:Configuration=%CONFIG% /p:Platform="%PLATFORM%" /p:AssemblyVersion=%GIT_TAG% /p:FileVersion=%GIT_TAG% /p:InformationalVersion=%GIT_TAG% /nologo /v:m
+%MSBUILD% %SOLUTION% /m /t:Rebuild /p:Configuration=%CONFIG% /p:Platform="%PLATFORM%" /nologo /v:m
 exit /b %errorlevel%
-
-
