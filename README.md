@@ -2,6 +2,8 @@
 
 A lightweight Windows Forms tool to send HTTP requests and inspect raw responses (status code, headers, and body).
 
+New rust enhanced version: [peek](<https://github.com/ropean/peek>)
+
 ### Features
 - Send HTTP GET or POST requests with optional SSL and redirect following
 - Displays resolved server IPs for the requested host and local machine IPs
